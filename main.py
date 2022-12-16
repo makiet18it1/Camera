@@ -69,6 +69,15 @@ while (True):
     cnts = imutils.grab_contours(cnts)
 
     cv2.rectangle(frame, top_left, bottom_right, (0, 255, 0), 2)
+    cv2.putText(frame, "Tinh trang: {}".format(text), (00, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+    cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"), (10, frame.shape[0] - 10),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+    frame_counter += 1
+    fps = (frame_counter / (time.time() - start_time))
+
+    # Display the FPS
+    cv2.putText(frame, 'FPS: {:.2f}'.format(fps), (20, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 1)
+
     for c in cnts:
 
         if cv2.contourArea(c) < args["min_area"]:
@@ -85,22 +94,14 @@ while (True):
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
             text = "Co xam nhap"
 
-            cv2.putText(frame, "Tinh trang: {}".format(text), (00, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-            cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"), (10, frame.shape[0] - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
-
     cv2.imshow('Camera An Ninh', frame)
-    cv2.imshow("Thresh", thresh)
-    cv2.imwrite('images/{}_result.png'.format(idx), frame)
+    # cv2.imshow("Thresh", thresh)
+    cv2.imwrite('/images/{}_result.png'.format(idx), frame)
     cv2.imwrite('../images/{}_delta.jpg'.format(idx), frameDelta)
     # cv2.imshow("Frame Delta", frameDelta)
     idx += 1
 
-    frame_counter += 1
-    fps = (frame_counter / (time.time() - start_time))
 
-    # Display the FPS
-    cv2.putText(frame, 'FPS: {:.2f}'.format(fps), (20, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 1)
 
     # Exit if q is pressed.
     if cv2.waitKey(1) == ord('q'):
