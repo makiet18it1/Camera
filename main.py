@@ -24,28 +24,16 @@ def is_person_present(frame, thresh=1100):
         return False, frame
 
 
-# def send_message(body, info_dict):
-#
-#     account_sid = info_dict['account_sid']
-#     auth_token  = info_dict['auth_token']
-#     client = Client(account_sid, auth_token)
-#     message = client.messages.create( to = info_dict['your_num'], from_ = info_dict['trial_num'], body= body)
-
 def sendMessage(body):
     my_token = "5722526497:AAEI_FoFddGf55OJZlDtZgtsC3GaJn0SkNM"
     bot = telegram.Bot(token=my_token)
-    bot.sendMessage(chat_id="5408192472", text=body)
+    bot.sendVideo(chat_id="5408192472", text= body)
 
-
+# 'http://192.168.1.6:8080/video'
 cv2.namedWindow('frame', cv2.WINDOW_KEEPRATIO)
-cap = cv2.VideoCapture('http://192.168.1.5:8080/video')
+cap = cv2.VideoCapture("test.mp4")
 width = int(cap.get(3))
 height = int(cap.get(4))
-#
-# with open('credentials.txt', 'r') as myfile:
-#   data = myfile.read()
-#
-# info_dict = eval(data)
 
 foog = cv2.createBackgroundSubtractorMOG2(detectShadows=True, varThreshold=100, history=2000)
 
@@ -76,7 +64,7 @@ while (True):
     if sum(de) == detection_thresh and not status:
         status = True
         entry_time = datetime.datetime.now().strftime("%A, %I-%M-%S %p %d %B %Y")
-        out = cv2.VideoWriter('outputs/{}.mp4'.format(entry_time), cv2.VideoWriter_fourcc(*'XVID'), 15.0,
+        out = cv2.VideoWriter('outputs/{}.avi'.format(entry_time), cv2.VideoWriter_fourcc(*'XVID'), 15.0,
                               (width, height))
 
     if status and not detected:
@@ -92,6 +80,8 @@ while (True):
                 out.release()
                 initial_time = None
 
+                # img_name = "arlet.png".format(img_counter)
+                # cv2.imwrite(img_name, frame)
                 body = "Alert: \n A Person Entered the Room at {} \n Left the room at {}".format(entry_time, exit_time)
                 sendMessage(body)
 
